@@ -3,16 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bookmark Practice</title>
+  <title>Shared Bookmarks</title>
+
+  <!-- Load JavaScript as a module so we can use imports. -->
   <script type="module" src="./script.js"></script>
 </head>
 <body>
   <h1>Shared Bookmarks</h1>
+
+  <!-- JavaScript adds the user options to this dropdown. -->
+  <label for="user-select">Choose a user</label>
   <select id="user-select">
     <option value="">Select a user</option>
   </select>
 
-  <ul id="bookmark-list"></ul>
+  <!-- The form collects the information for a new bookmark. -->
+  <form id="bookmark-form">
+    <p>
+      <label for="bookmark-url">Website URL</label>
+      <input
+        id="bookmark-url"
+        type="url"
+        placeholder="https://example.com"
+        required
+      >
+    </p>
 
+    <p>
+      <label for="bookmark-title">Title</label>
+      <input id="bookmark-title" type="text" required>
+    </p>
+
+    <p>
+      <label for="bookmark-description">Description</label>
+      <input id="bookmark-description" type="text" required>
+    </p>
+
+    <button type="submit">Add Bookmark</button>
+  </form>
+
+  <!-- JavaScript adds the selected user's bookmarks here. -->
+  <ul id="bookmark-list"></ul>
 </body>
 </html>
