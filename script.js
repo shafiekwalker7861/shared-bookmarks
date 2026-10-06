@@ -1,7 +1,7 @@
-// 1. Import the functions that read and save bookmark data.
 import { getUserIds, getData, setData } from "./storage.js";
+import { sortBookmarks } from "./utils.js";
 
-// 2. Find the HTML elements we need to work with.
+// Find the HTML elements we need to work with.
 const userSelect = document.querySelector("#user-select");
 const bookmarkForm = document.querySelector("#bookmark-form");
 const bookmarkList = document.querySelector("#bookmark-list");
@@ -10,7 +10,7 @@ const urlInput = document.querySelector("#bookmark-url");
 const titleInput = document.querySelector("#bookmark-title");
 const descriptionInput = document.querySelector("#bookmark-description");
 
-// 3. Get the user IDs and create an option for each user.
+// Get the user IDs and create an option for each user.
 const userIds = getUserIds();
 
 for (const userId of userIds) {
@@ -22,7 +22,7 @@ for (const userId of userIds) {
   userSelect.appendChild(option);
 }
 
-// 4. Display the bookmarks belonging to a particular user.
+// Display the bookmarks belonging to a particular user.
 function renderBookmarks(userId) {
   // Clear the previous user's bookmarks from the page.
   bookmarkList.textContent = "";
@@ -44,8 +44,11 @@ function renderBookmarks(userId) {
     return;
   }
 
-  // Create a list item for each bookmark.
-  for (const bookmark of bookmarks) {
+  // Sort bookmarks with newest first.
+  const sortedBookmarks = sortBookmarks(bookmarks);
+
+  // Display each bookmark.
+  for (const bookmark of sortedBookmarks) {
     const listItem = document.createElement("li");
 
     // Create a clickable title.
@@ -55,27 +58,60 @@ function renderBookmarks(userId) {
     title.target = "_blank";
     title.rel = "noopener noreferrer";
 
+    // Create the Copy URL button.
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.textContent = "Copy URL";
+
+    copyButton.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(bookmark.url);
+      copyButton.textContent = "URL copied!";
+    });
+
     // Create the description.
     const description = document.createElement("p");
     description.textContent = bookmark.description;
 
-    // Put the title and description inside the list item.
-    listItem.appendChild(title);
-    listItem.appendChild(description);
+    // Create and display the timestamp.
+    const timestamp = document.createElement("time");
+    const date = new Date(bookmark.timestamp);
 
-    // Put the completed list item on the page.
+    timestamp.dateTime = date.toISOString();
+    timestamp.textContent = `Created: ${date.toLocaleString("en-GB")}`;
+
+    // Create the like button.
+    const likeButton = document.createElement("button");
+    likeButton.type = "button";
+    likeButton.textContent = `Like (${bookmark.likes || 0})`;
+
+    likeButton.addEventListener("click", () => {
+      bookmark.likes = (bookmark.likes || 0) + 1;
+
+      // Save the updated likes so they persist across sessions.
+      setData(userId, bookmarks);
+
+      likeButton.textContent = `Like (${bookmark.likes})`;
+    });
+
+    // Add everything to the bookmark list item.
+    listItem.appendChild(title);
+    listItem.appendChild(copyButton);
+    listItem.appendChild(description);
+    listItem.appendChild(timestamp);
+    listItem.appendChild(likeButton);
+
     bookmarkList.appendChild(listItem);
   }
 }
 
-// 5. Display the correct bookmarks when the dropdown changes.
+// Display the correct bookmarks when the dropdown changes.
 userSelect.addEventListener("change", function () {
   const selectedUserId = userSelect.value;
 
   renderBookmarks(selectedUserId);
 });
 
-// 6. Add a bookmark when the user submits the form.
+// Add a bookmark when the user submits the form.
 bookmarkForm.addEventListener("submit", function (event) {
   // Stop the form from reloading the page.
   event.preventDefault();
