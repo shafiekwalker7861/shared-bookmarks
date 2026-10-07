@@ -1,48 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shared Bookmarks</title>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Bookmarks</title>
+    <meta name="description" content="Save useful websites, copy their links, and keep bookmarks organised by user.">
+    <link rel="stylesheet" href="./style.css">
 
-  <!-- Load JavaScript as a module so we can use imports. -->
-  <script type="module" src="./script.js"></script>
-</head>
-<body>
-  <h1>Shared Bookmarks</h1>
+    <!-- Load JavaScript as a module so we can use imports. -->
+    <script type="module" src="./script.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Shared Bookmarks</h1>
+        <p>Keep useful links together. Choose a user to see their collection.</p>
+      </header>
 
-  <!-- JavaScript adds the user options to this dropdown. -->
-  <label for="user-select">Choose a user</label>
-  <select id="user-select">
-    <option value="">Select a user</option>
-  </select>
+      <!-- JavaScript adds the user options to this dropdown. -->
+      <label for="user-select">Choose a user</label>
+      <select id="user-select">
+        <option value="">Select a user</option>
+      </select>
 
-  <!-- The form collects the information for a new bookmark. -->
-  <form id="bookmark-form">
-    <p>
-      <label for="bookmark-url">Website URL</label>
-      <input
-        id="bookmark-url"
-        type="url"
-        placeholder="https://example.com"
-        required
-      >
-    </p>
+      <div class="workspace">
+        <section aria-labelledby="add-heading">
+          <h2 id="add-heading">Add a bookmark</h2>
+          <!-- The form collects the information for a new bookmark. -->
+          <form id="bookmark-form">
+            <p>
+              <label for="bookmark-url">Website URL</label>
+              <input
+                id="bookmark-url"
+                type="url"
+                placeholder="https://example.com"
+                required
+              >
+            </p>
 
-    <p>
-      <label for="bookmark-title">Title</label>
-      <input id="bookmark-title" type="text" required>
-    </p>
+            <p>
+              <label for="bookmark-title">Title</label>
+              <input id="bookmark-title" type="text" required>
+            </p>
 
-    <p>
-      <label for="bookmark-description">Description</label>
-      <input id="bookmark-description" type="text" required>
-    </p>
+            <p>
+              <label for="bookmark-description">Description</label>
+              <input id="bookmark-description" type="text" required>
+            </p>
 
-    <button type="submit">Add Bookmark</button>
-  </form>
+            <button type="submit">Add Bookmark</button>
+          </form>
+        </section>
 
-  <!-- JavaScript adds the selected user's bookmarks here. -->
-  <ul id="bookmark-list"></ul>
-</body>
+        <section aria-labelledby="collection-heading">
+          <h2 id="collection-heading">Saved bookmarks</h2>
+          <p>Newest bookmarks appear first. Website links open in a new tab.</p>
+          <!-- JavaScript adds the selected user's bookmarks here. -->
+          <ul id="bookmark-list"></ul>
+        </section>
+      </div>
+      <p id="status-message" role="status" aria-atomic="true"></p>
+    </main>
+  </body>
 </html>

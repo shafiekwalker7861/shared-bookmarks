@@ -5,6 +5,7 @@ import { sortBookmarks } from "./utils.js";
 const userSelect = document.querySelector("#user-select");
 const bookmarkForm = document.querySelector("#bookmark-form");
 const bookmarkList = document.querySelector("#bookmark-list");
+const statusMessage = document.querySelector("#status-message");
 
 const urlInput = document.querySelector("#bookmark-url");
 const titleInput = document.querySelector("#bookmark-title");
@@ -29,6 +30,9 @@ function renderBookmarks(userId) {
 
   // If no user is selected, stop here.
   if (userId === "") {
+    const message = document.createElement("li");
+    message.textContent = "Choose a user to view their bookmarks.";
+    bookmarkList.appendChild(message);
     return;
   }
 
@@ -62,10 +66,15 @@ function renderBookmarks(userId) {
     const copyButton = document.createElement("button");
     copyButton.type = "button";
     copyButton.textContent = "Copy URL";
+    copyButton.setAttribute("aria-label", `Copy URL for ${bookmark.title}`);
 
     copyButton.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(bookmark.url);
-      copyButton.textContent = "URL copied!";
+      try {
+        await navigator.clipboard.writeText(bookmark.url);
+        statusMessage.textContent = `URL copied for "${bookmark.title}".`;
+      } catch {
+        statusMessage.textContent = `Could not copy automatically. Copy this URL: ${bookmark.url}`;
+      }
     });
 
     // Create the description.
@@ -83,6 +92,7 @@ function renderBookmarks(userId) {
     const likeButton = document.createElement("button");
     likeButton.type = "button";
     likeButton.textContent = `Like (${bookmark.likes || 0})`;
+    likeButton.setAttribute("aria-label", `Like ${bookmark.title}. ${bookmark.likes || 0} likes.`);
 
     likeButton.addEventListener("click", () => {
       bookmark.likes = (bookmark.likes || 0) + 1;
@@ -91,6 +101,8 @@ function renderBookmarks(userId) {
       setData(userId, bookmarks);
 
       likeButton.textContent = `Like (${bookmark.likes})`;
+      likeButton.setAttribute("aria-label", `Like ${bookmark.title}. ${bookmark.likes} likes.`);
+      statusMessage.textContent = `"${bookmark.title}" now has ${bookmark.likes} likes.`;
     });
 
     // Add everything to the bookmark list item.
@@ -108,8 +120,11 @@ function renderBookmarks(userId) {
 userSelect.addEventListener("change", function () {
   const selectedUserId = userSelect.value;
 
+  statusMessage.textContent = "";
   renderBookmarks(selectedUserId);
 });
+
+renderBookmarks(userSelect.value);
 
 // Add a bookmark when the user submits the form.
 bookmarkForm.addEventListener("submit", function (event) {
@@ -120,7 +135,8 @@ bookmarkForm.addEventListener("submit", function (event) {
 
   // A bookmark must belong to a selected user.
   if (selectedUserId === "") {
-    alert("Please select a user first.");
+    statusMessage.textContent = "Please select a user first.";
+    userSelect.focus();
     return;
   }
 
@@ -131,18 +147,27 @@ bookmarkForm.addEventListener("submit", function (event) {
 
   // Prevent titles or descriptions containing only spaces.
   if (title === "" || description === "") {
-    alert("Please enter a title and description.");
+    statusMessage.textContent = "Please enter a title and description.";
+    (title === "" ? titleInput : descriptionInput).focus();
     return;
   }
 
   // Allow website links using HTTP or HTTPS.
-  const websiteUrl = new URL(url);
+  let websiteUrl;
+  try {
+    websiteUrl = new URL(url);
+  } catch {
+    statusMessage.textContent = "Please enter a valid website URL.";
+    urlInput.focus();
+    return;
+  }
 
   if (
     websiteUrl.protocol !== "http:" &&
     websiteUrl.protocol !== "https:"
   ) {
-    alert("Please enter a website URL starting with http:// or https://.");
+    statusMessage.textContent = "Please enter a website URL starting with http:// or https://.";
+    urlInput.focus();
     return;
   }
 
@@ -167,4 +192,5 @@ bookmarkForm.addEventListener("submit", function (event) {
   // Clear the form and show the updated bookmark list.
   bookmarkForm.reset();
   renderBookmarks(selectedUserId);
+  statusMessage.textContent = `Saved "${title}" for User ${selectedUserId}.`;
 });

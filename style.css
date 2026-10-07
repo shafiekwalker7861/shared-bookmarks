@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f3f6f5;
+  color: #21352f;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+h1, h2 {
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 12px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 1.35rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+input, select, button {
+  font: inherit;
+  min-height: 44px;
+  border-radius: 6px;
+}
+
+input, select {
+  width: 100%;
+  border: 1px solid #74887e;
+  background: #fff;
+  color: #21352f;
+  padding: 10px 12px;
+}
+
+input::placeholder {
+  color: #52675e;
+}
+
+select {
+  max-width: 320px;
+  margin-bottom: 24px;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #215d48;
+  background: #215d48;
+  color: #fff;
+  padding: 10px 16px;
+}
+
+button:hover {
+  background: #153e30;
+}
+
+:focus-visible {
+  outline: 3px solid #874900;
+  outline-offset: 4px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 24px;
+  align-items: start;
+}
+
+section {
+  background: #fff;
+  padding: 24px;
+  border: 1px solid #c9d7cf;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+#bookmark-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+#bookmark-list li {
+  border-top: 1px solid #c9d7cf;
+  padding: 20px 0;
+  overflow-wrap: anywhere;
+}
+
+#bookmark-list a {
+  display: block;
+  color: #215d48;
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  text-underline-offset: 3px;
+}
+
+#bookmark-list time {
+  display: block;
+  color: #52675e;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+#status-message {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  main {
+    padding: 24px 16px;
+  }
+
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  section {
+    padding: 20px;
+  }
+}

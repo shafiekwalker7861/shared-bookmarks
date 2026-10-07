@@ -28,4 +28,13 @@ test("Bookmarks are sorted newest first", () => {
   assert.equal(sortedBookmarks[0].title, "New bookmark");
   assert.equal(sortedBookmarks[1].title, "Middle bookmark");
   assert.equal(sortedBookmarks[2].title, "Old bookmark");
+  // Sorting for display must not change the stored array's order.
+  assert.equal(bookmarks[0].title, "Old bookmark");
+  assert.notEqual(sortedBookmarks, bookmarks);
+});
+
+test("Sorting handles empty collections and numeric timestamps", () => {
+  assert.deepEqual(sortBookmarks([]), []);
+  assert.deepEqual(sortBookmarks([{ timestamp: 100 }, { timestamp: 300 }, { timestamp: 200 }]),
+    [{ timestamp: 300 }, { timestamp: 200 }, { timestamp: 100 }]);
 });
