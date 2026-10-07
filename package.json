@@ -1,0 +1,9 @@
+{
+  "name": "project-shared-bookmarks",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node example.test.js"
+  }
+}
